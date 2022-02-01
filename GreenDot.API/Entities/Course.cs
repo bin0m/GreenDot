@@ -10,7 +10,7 @@ namespace GreenDot.API.Entities
         public Guid Id { get; set; }
 
         [Required]
-        [MaxLength(50)]
+        [MaxLength(100)]
         public string Title { get; set; }
 
         [MaxLength(1500)]

@@ -6,6 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GreenDot.API.DbContexts;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenDot.API
 {
@@ -13,7 +16,28 @@ namespace GreenDot.API
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+
+            // migrate the database.  Best practice = in Main, using service scope
+            using (var scope = host.Services.CreateScope())
+            {
+                try
+                {
+                    var context = scope.ServiceProvider.GetService<CourseLibraryContext>();
+                    // for demo purposes, delete the database & migrate on startup so 
+                    // we can start with a clean state
+                    context.Database.EnsureDeleted();
+                    context.Database.Migrate();
+                }
+                catch (Exception ex)
+                {
+                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while migrating the database.");
+                }
+            }
+
+            // run the web app
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
