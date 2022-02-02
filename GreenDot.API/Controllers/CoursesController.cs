@@ -34,6 +34,23 @@ namespace GreenDot.API.Controllers
 
             return Ok(coursesDto);
         }
-                
+
+        [HttpGet("{courseId}")]
+        public ActionResult<CourseDto> GetCourseForAuthor(Guid id, Guid courseId)
+        {
+            if (!_courseLibraryRepository.AuthorExists(id))
+            {
+                return NotFound();
+            }
+            var course = _courseLibraryRepository.GetCourse(id,courseId);
+            if (course == null)
+            {
+                return NotFound();
+            }
+            var courseDto = _mapper.Map<CourseDto>(course);
+
+            return Ok(courseDto);
+        }
+
     }
 }
