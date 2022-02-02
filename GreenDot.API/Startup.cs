@@ -1,19 +1,14 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using GreenDot.API.DbContexts;
 using GreenDot.API.Services;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace GreenDot.API
 {
@@ -29,13 +24,21 @@ namespace GreenDot.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services
+                .AddControllers(setupAction =>
+                {
+                    setupAction.ReturnHttpNotAcceptable = true;
+                })
+                .AddXmlDataContractSerializerFormatters();
+
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GreenDot.API", Version = "v1" });
             });
 
             services
+                .AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies())
                 .AddScoped<ICourseLibraryRepository, CourseLibraryRepository>()
                 .AddDbContext<CourseLibraryContext>(options =>
                 {
