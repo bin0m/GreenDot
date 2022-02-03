@@ -9,6 +9,7 @@ using GreenDot.API.DbContexts;
 using GreenDot.API.Services;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 
 namespace GreenDot.API
 {
@@ -55,6 +56,15 @@ namespace GreenDot.API
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GreenDot.API v1"));
+            }
+            else
+            {
+                app.UseExceptionHandler(appBuilder =>
+                    appBuilder.Run(async context =>
+                    {
+                        context.Response.StatusCode = 500;
+                        await context.Response.WriteAsync("An unexpected fault happened. Try again later.");
+                    }));
             }
 
             app.UseHttpsRedirection();
