@@ -24,6 +24,7 @@ namespace GreenDot.API.Controllers
         }
 
         [HttpGet]
+        [HttpHead]
         public ActionResult<IEnumerable<Author>> GetAuthors()
         {
             IEnumerable<Author> authors = _courseLibraryRepository.GetAuthors();
