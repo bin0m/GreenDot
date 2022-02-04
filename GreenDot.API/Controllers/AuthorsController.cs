@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AutoMapper;
 using GreenDot.API.Entities;
 using GreenDot.API.Models;
+using GreenDot.API.ResourceParameters;
 using GreenDot.API.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,10 +27,9 @@ namespace GreenDot.API.Controllers
         [HttpGet]
         [HttpHead]
         public ActionResult<IEnumerable<Author>> GetAuthors(
-            [FromQuery] string mainCategory, 
-            [FromQuery] string searchQuery)
+            [FromQuery] AuthorsResourceParameters authorsResourceParameters)
         {
-            IEnumerable<Author> authors = _courseLibraryRepository.GetAuthors(mainCategory, searchQuery);
+            IEnumerable<Author> authors = _courseLibraryRepository.GetAuthors(authorsResourceParameters);
             IEnumerable<AuthorDto> authorsDto = _mapper.Map<IEnumerable<AuthorDto>>(authors);
             return Ok(authorsDto);
         }

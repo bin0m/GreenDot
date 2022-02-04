@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GreenDot.API.Entities;
+using GreenDot.API.ResourceParameters;
 
 namespace GreenDot.API.Services
 {
@@ -13,7 +14,7 @@ namespace GreenDot.API.Services
         void DeleteCourse(Course course);
         IEnumerable<Author> GetAuthors();
         IEnumerable<Author> GetAuthors(IEnumerable<Guid> authorIds);
-        IEnumerable<Author> GetAuthors(string mainCategory, string searchQuery);
+        IEnumerable<Author> GetAuthors(AuthorsResourceParameters authorsResourceParameters);
         Author GetAuthor(Guid authorId);
         void AddAuthor(Author author);
         void DeleteAuthor(Author author);

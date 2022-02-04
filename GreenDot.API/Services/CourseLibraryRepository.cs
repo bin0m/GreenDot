@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GreenDot.API.DbContexts;
 using GreenDot.API.Entities;
+using GreenDot.API.ResourceParameters;
 
 namespace GreenDot.API.Services
 {
@@ -122,25 +123,29 @@ namespace GreenDot.API.Services
             return _context.Authors.ToList<Author>();
         }
 
-        public IEnumerable<Author> GetAuthors(string mainCategory, string searchQuery)
+        public IEnumerable<Author> GetAuthors(AuthorsResourceParameters authorsResourceParameters)
         {
-            if (string.IsNullOrWhiteSpace(mainCategory) && 
-                string.IsNullOrWhiteSpace(searchQuery))
+            if (authorsResourceParameters == null)
+            {
+                return GetAuthors();
+            }
+            if (string.IsNullOrWhiteSpace(authorsResourceParameters.MainCategory) && 
+                string.IsNullOrWhiteSpace(authorsResourceParameters.SearchTerm))
             {
                 return GetAuthors();
             }
 
             var collection = _context.Authors as IQueryable<Author>;
             
-            if (!string.IsNullOrWhiteSpace(mainCategory))
+            if (!string.IsNullOrWhiteSpace(authorsResourceParameters.MainCategory))
             {
-                mainCategory = mainCategory.Trim();
+                var mainCategory = authorsResourceParameters.MainCategory.Trim();
                 collection = collection.Where(author => author.MainCategory == mainCategory);
             }
 
-            if (!string.IsNullOrWhiteSpace(searchQuery))
+            if (!string.IsNullOrWhiteSpace(authorsResourceParameters.SearchTerm))
             {
-                searchQuery = searchQuery.Trim();
+                var searchQuery = authorsResourceParameters.SearchTerm.Trim();
                 collection = collection.Where(author =>
                     author.MainCategory.Contains(searchQuery) ||
                     author.FirstName.Contains(searchQuery) ||
