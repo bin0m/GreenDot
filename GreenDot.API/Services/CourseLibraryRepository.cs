@@ -130,7 +130,7 @@ namespace GreenDot.API.Services
                 return GetAuthors();
             }
             if (string.IsNullOrWhiteSpace(authorsResourceParameters.MainCategory) && 
-                string.IsNullOrWhiteSpace(authorsResourceParameters.SearchTerm))
+                string.IsNullOrWhiteSpace(authorsResourceParameters.SearchQuery))
             {
                 return GetAuthors();
             }
@@ -143,9 +143,9 @@ namespace GreenDot.API.Services
                 collection = collection.Where(author => author.MainCategory == mainCategory);
             }
 
-            if (!string.IsNullOrWhiteSpace(authorsResourceParameters.SearchTerm))
+            if (!string.IsNullOrWhiteSpace(authorsResourceParameters.SearchQuery))
             {
-                var searchQuery = authorsResourceParameters.SearchTerm.Trim();
+                var searchQuery = authorsResourceParameters.SearchQuery.Trim();
                 collection = collection.Where(author =>
                     author.MainCategory.Contains(searchQuery) ||
                     author.FirstName.Contains(searchQuery) ||
