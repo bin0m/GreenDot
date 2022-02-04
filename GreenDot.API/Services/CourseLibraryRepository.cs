@@ -49,7 +49,7 @@ namespace GreenDot.API.Services
             }
 
             return _context.Courses
-              .Where(c => c.AuthorId == authorId && c.Id == courseId).FirstOrDefault();
+                .FirstOrDefault(c => c.AuthorId == authorId && c.Id == courseId);
         }
 
         public IEnumerable<Course> GetCourses(Guid authorId)
@@ -120,6 +120,22 @@ namespace GreenDot.API.Services
         public IEnumerable<Author> GetAuthors()
         {
             return _context.Authors.ToList<Author>();
+        }
+
+        public IEnumerable<Author> GetAuthors(string mainCategory)
+        {
+            if (string.IsNullOrWhiteSpace(mainCategory))
+            {
+                return GetAuthors();
+            }
+
+            mainCategory = mainCategory.Trim();
+
+            List<Author> result = _context.Authors
+                .Where(author => author.MainCategory == mainCategory)
+                .ToList();
+
+            return result;
         }
 
         public IEnumerable<Author> GetAuthors(IEnumerable<Guid> authorIds)

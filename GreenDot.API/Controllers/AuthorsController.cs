@@ -25,9 +25,10 @@ namespace GreenDot.API.Controllers
 
         [HttpGet]
         [HttpHead]
-        public ActionResult<IEnumerable<Author>> GetAuthors()
+        public ActionResult<IEnumerable<Author>> GetAuthors(
+            [FromQuery] string mainCategory)
         {
-            IEnumerable<Author> authors = _courseLibraryRepository.GetAuthors();
+            IEnumerable<Author> authors = _courseLibraryRepository.GetAuthors(mainCategory);
             IEnumerable<AuthorDto> authorsDto = _mapper.Map<IEnumerable<AuthorDto>>(authors);
             return Ok(authorsDto);
         }
