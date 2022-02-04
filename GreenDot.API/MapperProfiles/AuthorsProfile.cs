@@ -14,6 +14,11 @@ namespace GreenDot.API.MapperProfiles
                 .ForMember(
                     dest => dest.Name,
                     opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));
+
+            CreateMap<Models.AuthorForCreationDto, Entities.Author>()
+                .ForMember(
+                    dest => dest.Id,
+                    opt => opt.Ignore());
         }
     }
 }

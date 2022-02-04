@@ -34,8 +34,8 @@ namespace GreenDot.API.Controllers
             return Ok(authorsDto);
         }
 
-        [HttpGet("{id:guid}")]
-        public IActionResult GetAuthor(Guid id)
+        [HttpGet("{id:guid}", Name = "GetAuthor")]
+        public ActionResult<AuthorDto> GetAuthor(Guid id)
         {
             Author author = _courseLibraryRepository.GetAuthor(id);
             if (author == null)
@@ -47,5 +47,26 @@ namespace GreenDot.API.Controllers
             return Ok(authorDto);
         }
 
+        [HttpPost]
+        public IActionResult CreateAuthor(
+            [FromBody] AuthorForCreationDto authorForCreationDto)
+        {
+            if (authorForCreationDto == null)
+            {
+                return BadRequest();
+            }
+
+            var authorEntity = _mapper.Map<Author>(authorForCreationDto);
+            authorEntity.Id = Guid.NewGuid();
+            _courseLibraryRepository.AddAuthor(authorEntity);
+            _courseLibraryRepository.Save();
+            var authorDto = _mapper.Map<AuthorDto>(authorEntity);
+
+            return CreatedAtRoute(
+                "GetAuthor",
+                new {id = authorDto.Id},
+                authorDto);
+
+        }
     }
 }
