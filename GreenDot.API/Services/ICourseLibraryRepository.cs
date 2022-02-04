@@ -13,7 +13,7 @@ namespace GreenDot.API.Services
         void DeleteCourse(Course course);
         IEnumerable<Author> GetAuthors();
         IEnumerable<Author> GetAuthors(IEnumerable<Guid> authorIds);
-        IEnumerable<Author> GetAuthors(string mainCategory);
+        IEnumerable<Author> GetAuthors(string mainCategory, string searchQuery);
         Author GetAuthor(Guid authorId);
         void AddAuthor(Author author);
         void DeleteAuthor(Author author);

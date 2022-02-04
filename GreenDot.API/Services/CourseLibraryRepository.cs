@@ -122,20 +122,32 @@ namespace GreenDot.API.Services
             return _context.Authors.ToList<Author>();
         }
 
-        public IEnumerable<Author> GetAuthors(string mainCategory)
+        public IEnumerable<Author> GetAuthors(string mainCategory, string searchQuery)
         {
-            if (string.IsNullOrWhiteSpace(mainCategory))
+            if (string.IsNullOrWhiteSpace(mainCategory) && 
+                string.IsNullOrWhiteSpace(searchQuery))
             {
                 return GetAuthors();
             }
 
-            mainCategory = mainCategory.Trim();
+            var collection = _context.Authors as IQueryable<Author>;
+            
+            if (!string.IsNullOrWhiteSpace(mainCategory))
+            {
+                mainCategory = mainCategory.Trim();
+                collection = collection.Where(author => author.MainCategory == mainCategory);
+            }
 
-            List<Author> result = _context.Authors
-                .Where(author => author.MainCategory == mainCategory)
-                .ToList();
-
-            return result;
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                searchQuery = searchQuery.Trim();
+                collection = collection.Where(author =>
+                    author.MainCategory.Contains(searchQuery) ||
+                    author.FirstName.Contains(searchQuery) ||
+                    author.LastName.Contains(searchQuery));
+            }
+            
+            return collection.ToList();
         }
 
         public IEnumerable<Author> GetAuthors(IEnumerable<Guid> authorIds)
