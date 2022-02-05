@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using GreenDot.API.Entities;
-using GreenDot.API.Models;
 
 namespace GreenDot.API.MapperProfiles
 {
@@ -8,7 +6,8 @@ namespace GreenDot.API.MapperProfiles
     {
         public CoursesProfile()
         {
-            CreateMap<Course, CourseDto>();
+            CreateMap<Entities.Course, Models.CourseDto>();
+            CreateMap<Models.CourseForCreationDto, Entities.Course>();
         }
     }
 }
