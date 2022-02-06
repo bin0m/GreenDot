@@ -7,7 +7,13 @@ namespace GreenDot.API.MapperProfiles
         public CoursesProfile()
         {
             CreateMap<Entities.Course, Models.CourseDto>();
-            CreateMap<Models.CourseForCreationDto, Entities.Course>();
+            CreateMap<Models.CourseForCreationDto, Entities.Course>()
+                .ForMember(dest =>
+                    dest.AuthorId,
+                    opt => opt.Ignore())
+                .ForMember(
+                    dest => dest.Id,
+                    opt => opt.Ignore());
         }
     }
 }

@@ -36,7 +36,7 @@ namespace GreenDot.API.Controllers
             return Ok(coursesDto);
         }
 
-        [HttpGet("{courseId}")]
+        [HttpGet("{courseId}", Name = "GetCourseForAuthor")]
         public ActionResult<CourseDto> GetCourseForAuthor(Guid authorId, Guid courseId)
         {
             if (!_courseLibraryRepository.AuthorExists(authorId))
@@ -58,7 +58,20 @@ namespace GreenDot.API.Controllers
             Guid authorId, 
             CourseForCreationDto courseForCreationDto)
         {
+            if (!_courseLibraryRepository.AuthorExists(authorId))
+            {
+                return NotFound();
+            }
             var courseEntity = _mapper.Map<Course>(courseForCreationDto);
+            //courseEntity.AuthorId = authorId;
+            _courseLibraryRepository.AddCourse(authorId,courseEntity);
+            _courseLibraryRepository.Save();
+
+            var courseToReturn = _mapper.Map<CourseDto>(courseEntity);
+            return CreatedAtRoute(
+                "GetCourseForAuthor",
+                new {authorId = authorId, courseId = courseToReturn.Id},
+                courseToReturn);
         }
     }
 }
