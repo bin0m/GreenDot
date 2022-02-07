@@ -63,7 +63,6 @@ namespace GreenDot.API.Controllers
                 return NotFound();
             }
             var courseEntity = _mapper.Map<Course>(courseForCreationDto);
-            //courseEntity.AuthorId = authorId;
             _courseLibraryRepository.AddCourse(authorId,courseEntity);
             _courseLibraryRepository.Save();
 

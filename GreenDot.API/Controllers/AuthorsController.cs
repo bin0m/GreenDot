@@ -57,7 +57,6 @@ namespace GreenDot.API.Controllers
             }
 
             var authorEntity = _mapper.Map<Author>(authorForCreationDto);
-            authorEntity.Id = Guid.NewGuid();
             _courseLibraryRepository.AddAuthor(authorEntity);
             _courseLibraryRepository.Save();
             var authorDto = _mapper.Map<AuthorDto>(authorEntity);
