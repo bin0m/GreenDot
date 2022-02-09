@@ -13,6 +13,9 @@ namespace GreenDot.API.MapperProfiles
                     opt => opt.Ignore())
                 .ForMember(
                     dest => dest.Id,
+                    opt => opt.Ignore())
+                .ForMember(
+                    dest => dest.Author,
                     opt => opt.Ignore());
         }
     }
