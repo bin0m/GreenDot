@@ -8,18 +8,10 @@ namespace GreenDot.UnitTests
     public class MapperProfilesTests
     {
         [Fact]
-        public void AuthorsProfile_ShouldBeValid()
+        public void AllMapperProfiles_ShouldBeValid()
         {
             var configuration = new MapperConfiguration(cfg => {
                 cfg.AddProfile<AuthorsProfile>();
-            });
-            configuration.AssertConfigurationIsValid();
-        }
-
-        [Fact]
-        public void CoursesProfile_ShouldBeValid()
-        {
-            var configuration = new MapperConfiguration(cfg => {
                 cfg.AddProfile<CoursesProfile>();
             });
             configuration.AssertConfigurationIsValid();

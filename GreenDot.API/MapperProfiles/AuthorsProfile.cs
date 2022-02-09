@@ -18,9 +18,6 @@ namespace GreenDot.API.MapperProfiles
             CreateMap<Models.AuthorForCreationDto, Entities.Author>()
                 .ForMember(
                     dest => dest.Id,
-                    opt => opt.Ignore())
-                .ForMember(
-                    dest => dest.Courses,
                     opt => opt.Ignore());
         }
     }
