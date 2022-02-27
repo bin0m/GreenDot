@@ -5,6 +5,7 @@ using AutoMapper;
 using GreenDot.API.Entities;
 using GreenDot.API.Models;
 using GreenDot.API.Services;
+using GreenDot.API.ValueProviders;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GreenDot.API.Controllers
@@ -21,6 +22,16 @@ namespace GreenDot.API.Controllers
             _courseLibraryRepository = courseLibraryRepository 
                                        ?? throw new ArgumentNullException(nameof(courseLibraryRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<AuthorDto>> GetAuthorCollection(
+            [CommaSeparated] IEnumerable<string> ids)
+        {
+            IEnumerable<Guid> guids = ids.Select(id => Guid.Parse(id));
+            var authors = _courseLibraryRepository.GetAuthors(guids);
+            var authorsToReturn = _mapper.Map<IEnumerable<AuthorDto>>(authors);
+            return Ok(authorsToReturn);
         }
 
         [HttpPost]

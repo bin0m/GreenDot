@@ -9,6 +9,7 @@ using GreenDot.API.DbContexts;
 using GreenDot.API.Services;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using GreenDot.API.ValueProviders;
 using Microsoft.AspNetCore.Http;
 
 namespace GreenDot.API
@@ -28,7 +29,8 @@ namespace GreenDot.API
             services
                 .AddControllers(setupAction =>
                 {
-                    setupAction.ReturnHttpNotAcceptable = true;
+                    //setupAction.ReturnHttpNotAcceptable = true;
+                    setupAction.Conventions.Add(new CommaSeparatedQueryStringConvention());
                 })
                 .AddXmlDataContractSerializerFormatters();
 
