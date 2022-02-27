@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using GreenDot.API.Entities;
+using GreenDot.API.Helpers;
 using GreenDot.API.Models;
 using GreenDot.API.Services;
-using GreenDot.API.ValueProviders;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GreenDot.API.Controllers
@@ -24,13 +24,23 @@ namespace GreenDot.API.Controllers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        [HttpGet]
+        [HttpGet("({ids})", Name = "GetAuthorCollection")]
         public ActionResult<IEnumerable<AuthorDto>> GetAuthorCollection(
-            [FromQuery][CommaSeparated] IEnumerable<string> ids)
+            [FromRoute][ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         {
-            IEnumerable<Guid> guids = ids.Select(id => Guid.Parse(id));
-            IEnumerable<Author> authors = _courseLibraryRepository.GetAuthors(guids);
+            if (ids == null)
+            {
+                return BadRequest();
+            }
+            IEnumerable<Author> authors = _courseLibraryRepository.GetAuthors(ids);
+
+            if (ids.Count() != authors.Count())
+            {
+                return NotFound();
+            }
+
             IEnumerable<AuthorDto> authorsToReturn = _mapper.Map<IEnumerable<AuthorDto>>(authors);
+
             return Ok(authorsToReturn);
         }
 
@@ -54,9 +64,13 @@ namespace GreenDot.API.Controllers
             _courseLibraryRepository.Save();
 
             var authorsToReturn = _mapper.Map<IEnumerable<AuthorDto>>(authorEntities);
+            string ids = string.Join(",", authorsToReturn.Select(author => author.Id));
 
-            return Ok();
-
+            return CreatedAtRoute(
+                "GetAuthorCollection", 
+                new {ids = ids},
+                authorsToReturn
+                );
         }
     }
 }
