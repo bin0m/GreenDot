@@ -26,11 +26,11 @@ namespace GreenDot.API.Controllers
 
         [HttpGet]
         public ActionResult<IEnumerable<AuthorDto>> GetAuthorCollection(
-            [CommaSeparated] IEnumerable<string> ids)
+            [FromQuery][CommaSeparated] IEnumerable<string> ids)
         {
             IEnumerable<Guid> guids = ids.Select(id => Guid.Parse(id));
-            var authors = _courseLibraryRepository.GetAuthors(guids);
-            var authorsToReturn = _mapper.Map<IEnumerable<AuthorDto>>(authors);
+            IEnumerable<Author> authors = _courseLibraryRepository.GetAuthors(guids);
+            IEnumerable<AuthorDto> authorsToReturn = _mapper.Map<IEnumerable<AuthorDto>>(authors);
             return Ok(authorsToReturn);
         }
 
