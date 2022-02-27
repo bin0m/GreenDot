@@ -5,6 +5,8 @@ namespace GreenDot.API.ValueProviders
 {
     public class CommaSeparatedQueryStringConvention : IActionModelConvention
     {
+        private const string Separator = ",";
+
         public void Apply(ActionModel action)
         {
             SeparatedQueryStringAttribute attribute = null;
@@ -14,7 +16,7 @@ namespace GreenDot.API.ValueProviders
                 {
                     if (attribute == null)
                     {
-                        attribute = new SeparatedQueryStringAttribute(",");
+                        attribute = new SeparatedQueryStringAttribute(Separator);
                         parameter.Action.Filters.Add(attribute);
                     }
 

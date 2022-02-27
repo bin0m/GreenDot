@@ -34,21 +34,19 @@ namespace GreenDot.API.ValueProviders
         {
             var result = base.GetValue(key);
 
-            if (_keys != null && !_keys.Contains(key))
+            if (_keys != null && !_keys.Contains(key)) return result;
+
+            if (result == ValueProviderResult.None ||
+                !result.Values.Any(x => x.IndexOf(_separator, StringComparison.OrdinalIgnoreCase) > 0))
             {
                 return result;
             }
 
-            if (result != ValueProviderResult.None &&
-                result.Values.Any(x => x.IndexOf(_separator, StringComparison.OrdinalIgnoreCase) > 0))
-            {
-                var splitValues = new StringValues(result.Values
-                    .SelectMany(x => x.Split(new[] { _separator }, StringSplitOptions.None)).ToArray());
+            var splitValues = new StringValues(result.Values
+                .SelectMany(x => x.Split(new[] { _separator }, StringSplitOptions.None))
+                .ToArray());
 
-                return new ValueProviderResult(splitValues, result.Culture);
-            }
-
-            return result;
+            return new ValueProviderResult(splitValues, result.Culture);
         }
     }
 }

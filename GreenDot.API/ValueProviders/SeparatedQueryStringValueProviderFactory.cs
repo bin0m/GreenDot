@@ -9,10 +9,14 @@ namespace GreenDot.API.ValueProviders
         private readonly string _separator;
         private HashSet<string> _keys;
 
-        public SeparatedQueryStringValueProviderFactory(string separator) : this((IEnumerable<string>)null, separator)
-        { }
+        public SeparatedQueryStringValueProviderFactory(string separator) 
+            : this((IEnumerable<string>) null, separator)
+        {
+        }
 
-        public SeparatedQueryStringValueProviderFactory(string key, string separator) : this(new List<string> { key }, separator)
+        public SeparatedQueryStringValueProviderFactory(string key, string separator) 
+            : this(new List<string> {key},
+            separator)
         {
         }
 
@@ -32,11 +36,7 @@ namespace GreenDot.API.ValueProviders
 
         public void AddKey(string key)
         {
-            if (_keys == null)
-            {
-                _keys = new HashSet<string>();
-            }
-
+            _keys ??= new HashSet<string>();
             _keys.Add(key);
         }
     }
