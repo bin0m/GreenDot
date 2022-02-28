@@ -1,24 +1,16 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using GreenDot.API.ValidationAttributes;
 
 namespace GreenDot.API.Models
 {
-    public class CourseForCreationDto : IValidatableObject
+    [CourseTitleMustBeDifferentFromDescription]
+    public class CourseForCreationDto
     {
         [Required]
         [MaxLength(100)]
         public string Title { get; set; }
         
         [MaxLength(1500)]
-        public string Description { get; set; }
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if (Title == Description)
-            {
-                yield return new ValidationResult("The provided description should be different from title.",
-                    new[] {"CourseForCreationDto"});
-            }
-        }
+        public string Description { get; set; } 
     }
 }
