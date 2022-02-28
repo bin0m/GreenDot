@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using GreenDot.API.ValueProviders;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GreenDot.API
 {
@@ -32,7 +33,29 @@ namespace GreenDot.API
                     //setupAction.ReturnHttpNotAcceptable = true;
                     setupAction.Conventions.Add(new CommaSeparatedQueryStringConvention());
                 })
-                .AddXmlDataContractSerializerFormatters();
+                .AddXmlDataContractSerializerFormatters()
+                .ConfigureApiBehaviorOptions(setupAction =>
+                {
+                    setupAction.InvalidModelStateResponseFactory = context =>
+                    {
+                        var problemDetails = new ValidationProblemDetails(context.ModelState)
+                        {
+                            Type = "http://greendot.com/help/api/modelvalidationproblem",
+                            Title = "One or more model validation errors occurred.",
+                            Status = StatusCodes.Status422UnprocessableEntity,
+                            Detail = "See the errors property for details.",
+                            Instance = context.HttpContext.Request.Path
+                        };
+
+                        problemDetails.Extensions.Add("traceId", context.HttpContext.TraceIdentifier);
+
+                        return new UnprocessableEntityObjectResult(problemDetails)
+                        {
+                            ContentTypes = {"application/problem+json"}
+                        };
+                    };
+
+                }); 
 
 
             services.AddSwaggerGen(c =>
