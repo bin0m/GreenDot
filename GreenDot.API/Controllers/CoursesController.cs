@@ -72,5 +72,30 @@ namespace GreenDot.API.Controllers
                 new {authorId = authorId, courseId = courseToReturn.Id},
                 courseToReturn);
         }
+
+        [HttpPut("{courseId}")]
+        public ActionResult UpdateCourseForAuthor(
+            Guid authorId,
+            Guid courseId,
+            CourseForUpdateDto courseForUpdateDto)
+        {
+            if (!_courseLibraryRepository.AuthorExists(authorId))
+            {
+                return NotFound();
+            }
+
+            var courseFromRepo = _courseLibraryRepository.GetCourse(authorId, courseId);
+            if (courseFromRepo == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(courseForUpdateDto, courseFromRepo);
+
+            _courseLibraryRepository.UpdateCourse(courseFromRepo);
+            _courseLibraryRepository.Save();
+
+            return NoContent();
+        }
     }
 }
