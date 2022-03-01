@@ -7,11 +7,11 @@ namespace GreenDot.API.ValidationAttributes
     {
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            var course = (CourseForCreationDto) validationContext.ObjectInstance;
+            var course = (CourseForManipulationDto) validationContext.ObjectInstance;
             if (course.Title == course.Description)
             {
                 return new ValidationResult("The provided description should be different from title.",
-                    new[] { nameof(CourseForCreationDto) });
+                    new[] { nameof(CourseForManipulationDto) });
             }
             return ValidationResult.Success;
         }
